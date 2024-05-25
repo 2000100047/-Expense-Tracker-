@@ -1,0 +1,68 @@
+import csv
+
+# File where expenses will be stored
+FILE_NAME = 'expenses.csv'
+
+def add_expense(date, category, description, amount):
+    with open(FILE_NAME, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([date, category, description, amount])
+    print(f"Expense added: {date}, {category}, {description}, {amount}")
+
+def view_expenses():
+    try:
+        with open(FILE_NAME, mode='r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                print(row)
+    except FileNotFoundError:
+        print("No expenses found. Start by adding some expenses.")
+
+def delete_expense(date, category, description, amount):
+    try:
+        expenses = []
+        with open(FILE_NAME, mode='r') as file:
+            reader = csv.reader(file)
+            expenses = list(reader)
+        
+        with open(FILE_NAME, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            for expense in expenses:
+                if expense != [date, category, description, amount]:
+                    writer.writerow(expense)
+        print(f"Expense deleted: {date}, {category}, {description}, {amount}")
+    except FileNotFoundError:
+        print("No expenses found to delete.")
+
+def main():
+    while True:
+        print("\nExpense Tracker Menu")
+        print("1. Add Expense")
+        print("2. View Expenses")
+        print("3. Delete Expense")
+        print("4. Exit")
+        
+        choice = input("Enter your choice: ")
+        
+        if choice == '1':
+            date = input("Enter date (YYYY-MM-DD): ")
+            category = input("Enter category: ")
+            description = input("Enter description: ")
+            amount = input("Enter amount: ")
+            add_expense(date, category, description, amount)
+        elif choice == '2':
+            view_expenses()
+        elif choice == '3':
+            date = input("Enter date (YYYY-MM-DD): ")
+            category = input("Enter category: ")
+            description = input("Enter description: ")
+            amount = input("Enter amount: ")
+            delete_expense(date, category, description, amount)
+        elif choice == '4':
+            print("Exiting Expense Tracker.")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
